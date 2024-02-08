@@ -1,7 +1,8 @@
 import React, { ChangeEvent, useState } from 'react';
 import { Button } from './Button';
 import { SelecktTasksType } from '../App';
-import {InputAddForm} from './InputAddForm';
+import { InputAddForm } from './InputAddForm';
+import { EditableSpan } from './EditableSpan';
 
 type PropsType = {
     todoid: string
@@ -13,6 +14,7 @@ type PropsType = {
     HendlerCheckbox: (id:string,todoid: string)=> void
     titleSeleckt: SelecktTasksType
     todoDelete:(todoid: string)=> void
+    onChangeTask:(todoid: string, id:string,newTitle: string)=> void
 }
 
 export type TaskOnliType = {
@@ -22,56 +24,15 @@ export type TaskOnliType = {
 }
 
 export const TodoList:React.FC<PropsType> = (props) => {
-    const {title, tasks, taskDelete, SelecktTasks, addTask, HendlerCheckbox,titleSeleckt, todoid,todoDelete} = props
-    // const [error, setError] = useState <string | null>(null)
-    // const [inputValue, setInputValue] = useState ('')
-    const DeleteHendlerBatten = (id: string) => {
-        taskDelete(id, todoid)
-    }
-    const SelecktHendlerTasks = (title: SelecktTasksType) => {
-        SelecktTasks(title,todoid)
-    }
-    // const onChangeHendler = (title: ChangeEvent<HTMLInputElement>) => {
-    //     setInputValue(title.currentTarget.value)
-    // }
-    // const addTaskHendler = () => {
-    //     // trim - если строка пустая, хуй тебе таска
-    //     if(inputValue.trim()){
-    //         addTask(inputValue.trim(),todoid);
-    //         setInputValue('')
-    //     }else{
-    //     // если всёже хуй то красный
-    //         setError('надо что-то написать')
-    //     }
-    // }
-    // const onChangeHendlerKey = (title: React.KeyboardEvent<HTMLInputElement>) => {
-    //     setError(null)
-    //     if (title.key==='Enter'){
-    //         if(inputValue.trim()){
-    //             addTask(inputValue.trim(),todoid);
-    //             setInputValue('')
-    //         }else{
-    //         // если всёже хуй то красный
-    //             setError('надо что-то написать')
-    //         }
-    //     }
-    // }
-   
-    const onChangeHendlerCheckbox = (id: string) =>{
-        HendlerCheckbox(id,todoid)
-    }
-    const todoDeleteHendler = () => {
-        todoDelete(todoid)
-    }
-    const addTitleInput =(titleInput: string)=>{
-        if(titleInput.trim()){
-            addTask(titleInput.trim(),todoid);
-            // setInputValue('')
-        }
-        // else{
-        //     setError('надо что-то написать')
-        // } 
-    }
+    const {title, tasks, taskDelete, SelecktTasks, addTask, HendlerCheckbox,titleSeleckt, todoid,todoDelete, onChangeTask} = props
+    
+    const DeleteHendlerBatten = (id: string) => taskDelete(id, todoid)
+    const SelecktHendlerTasks = (title: SelecktTasksType) => SelecktTasks(title,todoid)
+    const onChangeHendlerCheckbox = (id: string) => HendlerCheckbox(id,todoid)
+    const todoDeleteHendler = () => todoDelete(todoid)
+    const addTitleInput =(titleInput: string)=> addTask(titleInput.trim(),todoid);
+    
+
     return (
         <div>
             <h4>
@@ -79,29 +40,25 @@ export const TodoList:React.FC<PropsType> = (props) => {
                 <Button titleSeleckt={titleSeleckt} collback={todoDeleteHendler} name='Delete'/>
             </h4>
             <div>
-                {/* <input 
-                    value={inputValue} 
-                    onChange={event=>onChangeHendler(event)}
-                    onKeyDown={event=>onChangeHendlerKey(event)}
-                    className={error ? 'error' : ''}
-                /> */}
-                {/* <Button titleSeleckt={titleSeleckt} collback={addTaskHendler} name='+'/>
-                { error && <div className='error-message'>{error}</div>} */}
-                <div>
                 <InputAddForm addTitleInput={addTitleInput}/>
-                </div>
             </div>
             <ul>
-            {tasks.map(el=>
-                <li key={el.id} className={el.isDone ? 'is-done' : ''}>
+            {tasks.map(el=>{
+                    const updateTaskHandler = (newTitle: string) => {
+                        onChangeTask(todoid, el.id, newTitle)
+                    }
+                    
+                    return <li key={el.id} className={el.isDone ? 'is-done' : ''}>
                 <input 
                     type="checkbox" 
                     checked={el.isDone} 
                     onChange={event=>onChangeHendlerCheckbox(el.id)}
                 />
-                <span>{el.title}</span>
+                
+                <EditableSpan onChangeTask={updateTaskHandler} title = {el.title}/>
+                {/* <span>{el.title}</span> */}
                 <Button titleSeleckt={titleSeleckt} collback={()=>DeleteHendlerBatten(el.id)} name='X'/>
-                </li>
+                </li>}
                 )}
             </ul>
             <div>

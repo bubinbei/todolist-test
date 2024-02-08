@@ -78,6 +78,13 @@ function App() {
         setTasks({...tasks})
        }
     }
+    const onChangeTask = (todoid: string, id:string,newTitle: string) => {
+        console.log(todoid, id,newTitle);
+        let ubdateTask = tasks[todoid].find(el=>el.id===id)
+        if (ubdateTask) ubdateTask.title = newTitle
+        // перерисовываю
+        setTasks({...tasks})
+    }
 
     return (
         <div className="App">
@@ -108,6 +115,7 @@ function App() {
                             HendlerCheckbox={HendlerCheckbox}
                             titleSeleckt={todo.filter}
                             todoDelete={todoDelete}
+                            onChangeTask={onChangeTask}
                         />
 
                 })
