@@ -3,7 +3,8 @@ import './App.css';
 import { TaskOnliType, TodoList } from './Components/TodoList';
 import { v1 } from 'uuid';
 import { InputAddForm } from './Components/InputAddForm';
-import { addSyntheticTrailingComment } from 'typescript';
+import { AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 
 export type SelecktTasksType =  'All' | 'Active' | 'Completed'
 type TodoListType = {
@@ -88,38 +89,65 @@ function App() {
 
     return (
         <div className="App">
-            <div>
-                <InputAddForm addTitleInput={addNewTodo} />
-            </div>
-            {
-                todolistS.map( todo =>{
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton
+                        // size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        // sx={{ mr: 2 }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        Todo
+                    </Typography>
+                    <Button color="inherit">Login</Button>
+                </Toolbar>
+            </AppBar>
+            <Container fixed>
+                <Grid container style={{padding: '25px'}}>
+                    <InputAddForm addTitleInput={addNewTodo} />
+                </Grid>
+
+                <Grid container spacing={3}>
+                    {
+                        todolistS.map( todo =>{
                     
                     let tasksToTodo = tasks[todo.id]
-                
+                    
                     if(todo.filter==='Active') {
-                            tasksToTodo = tasks[todo.id].filter(el=>el.isDone)
+                        tasksToTodo = tasks[todo.id].filter(el=>el.isDone)
                     }
-                
+                    
                     if(todo.filter==='Completed') {
-                            tasksToTodo = tasks[todo.id].filter(el=>!el.isDone)
+                        tasksToTodo = tasks[todo.id].filter(el=>!el.isDone)
                     }
+                    
+                    return <Grid>
+                        <Paper style={{padding: '15px'}}>
 
-                    return <TodoList 
-                            key = {todo.id}
-                            todoid = {todo.id}
-                            title={todo.title} 
-                            tasks={tasksToTodo} 
-                            taskDelete={taskDelete}
-                            SelecktTasks={SelecktTasks}
-                            addTask={addTask}
-                            HendlerCheckbox={HendlerCheckbox}
-                            titleSeleckt={todo.filter}
-                            todoDelete={todoDelete}
-                            onChangeTask={onChangeTask}
-                        />
+                    <TodoList 
+                    key = {todo.id}
+                    todoid = {todo.id}
+                    title={todo.title} 
+                    tasks={tasksToTodo} 
+                    taskDelete={taskDelete}
+                    SelecktTasks={SelecktTasks}
+                    addTask={addTask}
+                    HendlerCheckbox={HendlerCheckbox}
+                    titleSeleckt={todo.filter}
+                    todoDelete={todoDelete}
+                    onChangeTask={onChangeTask}
+                    />
+                    </Paper>
+                    </Grid>
+                        })
+                    }
+                </Grid>
 
-                })
-            }
+            </Container>
             
         </div>
     );

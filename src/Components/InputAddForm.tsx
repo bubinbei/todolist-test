@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useState } from 'react'
-import { Button } from './Button';
+import { ButtonUniversal } from './Button';
+import { TextField } from '@mui/material';
 type InputType = {
     addTitleInput: (titleInput: string) => void
 }
@@ -39,14 +40,27 @@ export const InputAddForm:React.FC<InputType> = (props) => {
     }
   return (
     <div>
-        <input 
+        {/* <input 
             value={inputValue} 
-            onChange={event=>onChangeHendler(event)}
-            onKeyDown={event=>onChangeHendlerKey(event)}
+            onChange={onChangeHendler}
+            onKeyDown={onChangeHendlerKey}
             className={error ? 'error' : ''}
-            />
-            <Button titleSeleckt={'All'} collback={addInputHendler} name='+'/>
-            { error && <div className='error-message'>{error}</div>}
+        /> */}
+        <TextField 
+            id="outlined-basic" 
+            label="Title" 
+            variant="outlined" 
+            value={inputValue} 
+            onChange={onChangeHendler}
+            onKeyDown={onChangeHendlerKey}
+            className={error ? 'error' : ''}
+            size="small"
+            // color={error ? 'error' : 'info'}
+            error={!!error}
+            helperText={error}
+        />
+            <ButtonUniversal titleSeleckt={'All'} collback={addInputHendler} name='Add'/>
+            {/* { error && <div className='error-message'>{error}</div>} */}
     </div>
   )
 }
